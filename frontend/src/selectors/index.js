@@ -52,6 +52,7 @@ export const getPostSortState = createSelector(
         return {
             togglePostTypeUIState: sortState.togglePostTypeUIState,
             togglePostOrderUIState: sortState.togglePostOrderUIState,
+            modalOpen: sortState.modalOpen,
             sortPostType: sortState.sortPostType,
             sortPostOrder: sortState.sortPostOrder
         };

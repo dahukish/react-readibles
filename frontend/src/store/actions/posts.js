@@ -33,3 +33,24 @@ export const voteForPost = (id, vote) => dispatch => (
     API.voteForPost(id, vote)
         .then(updatedPost => dispatch(recieveVoteForPost(updatedPost)))
 );
+
+export const addNewPost = (newPost) => ({
+    type: ActionTypes.CREATE_POST,
+    newPost
+});
+
+export const submitNewPostValues = (postValues) => dispatch => (
+    API.createPost(postValues)
+        .then(newPost => dispatch(addNewPost(newPost)))
+
+);
+
+export const removeDeletedPost = (deletedPost) => ({
+    type: ActionTypes.DELETE_POST,
+    deletedPost
+});
+
+export const deletePost = (id) => dispatch => (
+    API.deletePost(id)
+        .then(deletedPost =>  dispatch(removeDeletedPost(deletedPost)))
+);

@@ -7,6 +7,7 @@ export const initialApplicationState = {
     sortCommentOrder: 'asc',
     togglePostTypeUIState: false,
     togglePostOrderUIState: true,
+    modalOpen: false
 };
 
 const applicationReducer = (state = initialApplicationState, action) => {
@@ -22,6 +23,11 @@ const applicationReducer = (state = initialApplicationState, action) => {
                 ...state,
                 togglePostOrderUIState: action.currentToggleState,
                 sortPostOrder: (action.currentToggleState === true) ? 'asc' : 'desc'
+            }
+        case ActionTypes.TOGGLE_MODAL_STATE:
+            return {
+                ...state,
+                modalOpen: action.modalState
             }
         default:
             return state;

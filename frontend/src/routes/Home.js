@@ -8,11 +8,15 @@ import Toggle from 'material-ui/Toggle';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Dialog from 'material-ui/Dialog';
+import uuidv4 from 'uuid/v4';
 import * as Actions from '../store/actions';
 import { getPostsWithCommentCount, getCategories, getPostSortState } from '../selectors';
+import CreatePostForm from '../forms/create-post';
 
 const onclick = (buttonName) => {
     console.log(`${buttonName} be clicked yo!`);
@@ -20,6 +24,7 @@ const onclick = (buttonName) => {
 
 const getCategoryPath = (categories, currentCat) => {
     let categoryPath;
+    console.log(categories, currentCat);
     if (categories.length) {
         categoryPath = categories.filter(category => category.name === currentCat)[0].path
     }
@@ -54,6 +59,42 @@ const Home = (props) => {
                     labelPosition="right"
                     style={{ margin: 20 }}
                 />
+                <FloatingActionButton mini={true} onClick={() => {
+                    props.actions.toggleModalState(true);
+                }}>
+                    <ContentAdd />
+                </FloatingActionButton>
+                <Dialog
+                    title="Dialog With Actions"
+                    open={props.sort.modalOpen}
+                    actions={[
+                        <FlatButton
+                            label="Cancel"
+                            primary={true}
+                            onClick={() => {
+                                props.actions.toggleModalState(false);
+                            }}
+                        />,
+                        <FlatButton
+                            label="Submit"
+                            primary={true}
+                            disabled={true}
+                            onClick={() => {
+                                props.actions.toggleModalState(false);
+                            }}
+                        />,
+                    ]}
+                >
+                    <CreatePostForm onSubmit={(values)=>{
+                        const newPost = {
+                            id: uuidv4(),
+                            timestamp: Date.now(),
+                            voteScore: 1,
+                            ...values
+                        };
+                        props.actions.submitNewPostValues(newPost);
+                    }}/>
+                </Dialog>
             </div>
             {
                 props.posts.map((post) => (
@@ -95,7 +136,7 @@ const Home = (props) => {
                                 onclick(`view post for ${post.id}`);
                             }} />
                             <FloatingActionButton mini={true} onClick={() => {
-                                onclick('delete');
+                                props.actions.deletePost(post.id);
                             }}>
                                 <ActionDelete />
                             </FloatingActionButton>

@@ -29,6 +29,16 @@ const postsReducer = (state = initialPosts, action) => {
             return {
                 ...state
             }
+        case ActionTypes.CREATE_POST:
+            state.posts.push(action.newPost);
+            return {
+                ...state
+            }
+        case ActionTypes.DELETE_POST:
+            return {
+                ...state,
+                posts: state.posts.filter(post => post.id !== action.deletedPost.id)
+            }
         default:
             return state;
     }
