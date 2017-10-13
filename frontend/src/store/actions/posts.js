@@ -1,5 +1,6 @@
 import * as ActionTypes from './actionTypes';
 import * as API from '../../utils/postsAPI';
+import { initialize, submit, reset } from 'redux-form';
 
 export const sortPostsBy = (posts, sortBy, order) => ({
     type: ActionTypes.SORT_POSTS,
@@ -52,5 +53,23 @@ export const removeDeletedPost = (deletedPost) => ({
 
 export const deletePost = (id) => dispatch => (
     API.deletePost(id)
-        .then(deletedPost =>  dispatch(removeDeletedPost(deletedPost)))
+        .then(deletedPost => dispatch(removeDeletedPost(deletedPost)))
 );
+
+export const updateCurrentPost = (currentPost) => ({
+    type: ActionTypes.SET_CURRENT_POST,
+    currentPost
+});
+
+export const setCurrentPost = (currentPost) => dispatch => {
+    dispatch(updateCurrentPost(currentPost));
+    dispatch(initialize('post_form', currentPost));
+};
+
+export const submitPostForm = ()=> dispatch => {
+    dispatch(submit('post_form'));
+};
+
+export const resetPostForm = ()=> dispatch => {
+    dispatch(reset('post_form'));
+};

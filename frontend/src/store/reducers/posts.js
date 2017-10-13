@@ -1,7 +1,8 @@
 import * as ActionTypes from '../actions/actionTypes';
 
 export const initialPosts = {
-    posts: []
+    posts: [],
+    currentPost: null
 };
 
 const postsReducer = (state = initialPosts, action) => {
@@ -38,6 +39,11 @@ const postsReducer = (state = initialPosts, action) => {
             return {
                 ...state,
                 posts: state.posts.filter(post => post.id !== action.deletedPost.id)
+            }
+        case ActionTypes.SET_CURRENT_POST:
+            return {
+                ...state,
+                currentPost: action.currentPost
             }
         default:
             return state;

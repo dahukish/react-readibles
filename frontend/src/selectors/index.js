@@ -58,3 +58,5 @@ export const getPostSortState = createSelector(
         };
     }
 );
+
+export const getCurrentPost = (state) => state.postsReducer.currentPost;

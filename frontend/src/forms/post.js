@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { getCategories } from '../selectors';
 
-const CreatePost = props => {
-    const { handleSubmit, pristine, reset, submitting } = props
+const Post = props => {
+    const { handleSubmit } = props
     return (
         <form onSubmit={(handleSubmit)}>
             <div>
@@ -55,14 +55,6 @@ const CreatePost = props => {
                     />
                 </div>
             </div>
-            <div>
-                <button type="submit" disabled={pristine || submitting}>
-                    Submit
-        </button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>
-                    Clear Values
-        </button>
-            </div>
         </form>
     )
 };
@@ -74,11 +66,11 @@ const mapStateToProps = (state) => {
 };
 
 
-const CreatePostForm = reduxForm({
-    form: 'create_post'
-})(CreatePost);
+const PostForm = reduxForm({
+    form: 'post_form'
+})(Post);
 
 export default connect(
     mapStateToProps,
     null
-)(CreatePostForm);
+)(PostForm);
