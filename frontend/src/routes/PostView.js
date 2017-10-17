@@ -58,6 +58,9 @@ const PostView = (props) => {
                             comments.map(comment => (
                                 <ListItem key={comment.id} primaryText={comment.author}>
                                     <p>{comment.body}</p>
+                                    <RaisedButton label="Delete Comment" onClick={() => {
+                                        props.actions.deleteComment(comment.id);
+                                    }} />
                                 </ListItem>
                             ))
                         }

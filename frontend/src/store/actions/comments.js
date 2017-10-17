@@ -30,3 +30,24 @@ export const submitCommentForm = ()=> dispatch => {
 export const resetCommentForm = ()=> dispatch => {
     dispatch(reset('comment_form'));
 };
+
+export const updateComment = (updatedComment) => ({
+    type: ActionTypes.UPDATE_COMMENT,
+    updatedComment
+});
+
+export const submitUpdatedCommentValues = (id, commentValues) => dispatch => (
+    API.updateComment(id, commentValues)
+        .then(updatedComment => dispatch(updateComment(updatedComment)))
+
+);
+
+export const removeDeletedComment = (deletedComment) => ({
+    type: ActionTypes.DELETE_COMMENT,
+    deletedComment
+});
+
+export const deleteComment = (id) => dispatch => (
+    API.deleteComment(id)
+        .then(deletedComment => dispatch(removeDeletedComment(deletedComment)))
+);

@@ -48,17 +48,17 @@ export const getCurrentPostFromState = (state) => state.postsReducer.currentPost
 export const getCurrentPostFromParams = (state, props) =>
     state.postsReducer.posts
         .filter(post => post.category === props.match.params.category)
-        .filter(filteredPost => filteredPost.id === props.match.params.id);
+        .filter(filteredPost => filteredPost.id === props.match.params.id)[0];
 
 export const getViewPost = createSelector(
     getCurrentPostFromParams,
-    (posts) => {
-        return posts[0];
+    (post) => {
+        return post;
     }
 );
 
 export const getViewPostComments = (state, props) => {
-    const post = getCurrentPostFromParams(state, props)[0];
+    const post = getCurrentPostFromParams(state, props);
     return commentsSelector(state).filter(comment => comment.parentId === post.id);
 };
 

@@ -37,3 +37,22 @@ export const addComment = (commentValues) => {
         .then(res => res.json())
         .then(data => data);
 };
+
+export const updateComment = (id, commentValues) => {
+    return fetch(`http://localhost:3001/comments/${id}`, {
+      headers,
+      method: 'put',
+      body: JSON.stringify(commentValues)
+    })
+      .then(res => res.json())
+      .then(data => data);
+  };
+
+  export const deleteComment = (id) => {
+    return fetch(`http://localhost:3001/comments/${id}`, {
+      headers,
+      method: 'delete'
+    })
+      .then(res => res.json())
+      .then(data => data);
+  };

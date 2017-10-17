@@ -73,6 +73,16 @@ const postsReducer = (state = initialPosts, action) => {
                     return post;
                 })
             }
+        case ActionTypes.DELETE_COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map(post => {
+                    if (post.id === action.deletedComment.parentId) {
+                        post.commentCount--;
+                    }
+                    return post;
+                })
+            }
         default:
             return state;
     }
