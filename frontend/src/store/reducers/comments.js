@@ -11,6 +11,11 @@ const commentsReducer = (state = initialComments, action) => {
                 ...state,
                 comments: action.comments
             };
+        case ActionTypes.CREATE_COMMENT:
+            state.comments.push(action.newComment);
+            return {
+                ...state
+            }
         default:
             return state;
     }

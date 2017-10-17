@@ -7,7 +7,8 @@ export const initialApplicationState = {
     sortCommentOrder: 'asc',
     togglePostTypeUIState: false,
     togglePostOrderUIState: true,
-    modalOpen: false
+    modalOpen: false,
+    postFormMode: 'create'
 };
 
 const applicationReducer = (state = initialApplicationState, action) => {
@@ -28,6 +29,11 @@ const applicationReducer = (state = initialApplicationState, action) => {
             return {
                 ...state,
                 modalOpen: action.modalState
+            }
+        case ActionTypes.SET_POST_FORM_MODE:
+            return {
+                ...state,
+                postFormMode: action.formMode
             }
         default:
             return state;

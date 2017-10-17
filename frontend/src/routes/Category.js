@@ -2,15 +2,16 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import * as Actions from '../store/actions';
-import { getPostsForCategoryWithCommentCount } from '../selectors';
+import { getPostsForCategorySorted } from '../selectors';
 
 const onclick = (buttonName) => {
     console.log(`${buttonName} be clicked dude!`);
@@ -19,6 +20,13 @@ const onclick = (buttonName) => {
 const Category = (props) => {
     return (
         <div className="posts-list">
+            <Toolbar>
+                <ToolbarGroup firstChild={true}>
+                    <RaisedButton label="Go Back" primary={true} onClick={() => {
+                        props.actions.push('/');
+                    }} />
+                </ToolbarGroup>
+            </Toolbar>
             {
                 props.posts.map((post) => (
                     <Card key={post.id}>
@@ -71,7 +79,7 @@ Category.propTypes = {
 
 const mapStateToProps = (state, props) => {
     return {
-        posts: getPostsForCategoryWithCommentCount(state, props),
+        posts: getPostsForCategorySorted(state, props),
         categories: state.categoriesReducer.categories
     };
 };
@@ -82,9 +90,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(Category)
-);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Category);

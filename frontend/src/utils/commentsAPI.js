@@ -1,8 +1,9 @@
+const headers = new Headers({
+    'Authorization': 'ds123',
+    'Content-Type': 'application/json; charset=utf-8'
+});
 
 const requestBuilder = (postIDs) => {
-    const headers = new Headers({
-        'Authorization': 'ds123'
-    });
     return postIDs.map(id => {
         return fetch(`http://localhost:3001/posts/${id}/comments`,
             {
@@ -20,8 +21,19 @@ export const getAllComments = (postIDs) => {
         .then(data => {
             return data.filter(item => {
                 return item.length >= 1;
-            }).reduce((accumulator, currentValue)=>{
+            }).reduce((accumulator, currentValue) => {
                 return accumulator.concat(currentValue);
             });
         });
+};
+
+export const addComment = (commentValues) => {
+    console.log('commentValues', commentValues);
+    return fetch('http://localhost:3001/comments', {
+        headers,
+        method: 'post',
+        body: JSON.stringify(commentValues)
+    })
+        .then(res => res.json())
+        .then(data => data);
 };

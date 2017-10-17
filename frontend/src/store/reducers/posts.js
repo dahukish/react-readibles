@@ -1,4 +1,5 @@
 import * as ActionTypes from '../actions/actionTypes';
+import { commentsFilter } from '../../utils/helpers';
 
 export const initialPosts = {
     posts: [],
@@ -23,8 +24,15 @@ const postsReducer = (state = initialPosts, action) => {
                 })
             }
         case ActionTypes.RECIEVE_COMMENTS:
+            const postsWithComments = state.posts.map(post => {
+                return {
+                    ...post,
+                    commentCount: commentsFilter(action.comments, post)
+                };
+            })
             return {
-                ...state
+                ...state,
+                posts: postsWithComments
             }
         case ActionTypes.SORT_POSTS:
             return {
@@ -35,6 +43,16 @@ const postsReducer = (state = initialPosts, action) => {
             return {
                 ...state
             }
+        case ActionTypes.UPDATE_POST:
+            return {
+                ...state,
+                posts: state.posts.map(post => {
+                    if (post.id === action.updatedPost.id) {
+                        post = action.updatedPost;
+                    }
+                    return post;
+                })
+            }
         case ActionTypes.DELETE_POST:
             return {
                 ...state,
@@ -44,6 +62,16 @@ const postsReducer = (state = initialPosts, action) => {
             return {
                 ...state,
                 currentPost: action.currentPost
+            }
+        case ActionTypes.CREATE_COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map(post => {
+                    if (post.id === action.newComment.parentId) {
+                        post.commentCount++;
+                    }
+                    return post;
+                })
             }
         default:
             return state;

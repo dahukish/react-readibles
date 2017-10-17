@@ -46,6 +46,17 @@ export const submitNewPostValues = (postValues) => dispatch => (
 
 );
 
+export const updatePost = (updatedPost) => ({
+    type: ActionTypes.UPDATE_POST,
+    updatedPost
+});
+
+export const submitUpdatedPostValues = (id, postValues) => dispatch => (
+    API.updatePost(id, postValues)
+        .then(updatedPost => dispatch(updatePost(updatedPost)))
+
+);
+
 export const removeDeletedPost = (deletedPost) => ({
     type: ActionTypes.DELETE_POST,
     deletedPost

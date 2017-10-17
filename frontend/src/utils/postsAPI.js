@@ -34,6 +34,16 @@ export const createPost = (postValues) => {
     .then(data => data);
 };
 
+export const updatePost = (id, postValues) => {
+  return fetch(`http://localhost:3001/posts/${id}`, {
+    headers,
+    method: 'put',
+    body: JSON.stringify(postValues)
+  })
+    .then(res => res.json())
+    .then(data => data);
+};
+
 export const deletePost = (id) => {
   return fetch(`http://localhost:3001/posts/${id}`, {
     headers,

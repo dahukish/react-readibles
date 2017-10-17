@@ -2,8 +2,8 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import Toggle from 'material-ui/Toggle';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
@@ -15,16 +15,15 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import uuidv4 from 'uuid/v4';
 import * as Actions from '../store/actions';
-import { getPostsWithCommentCount, getCategories, getPostSortState } from '../selectors';
+import {
+    getPostsSorted,
+    getCategories,
+    getUIState
+} from '../selectors';
 import PostForm from '../forms/post';
-
-const onclick = (buttonName) => {
-    console.log(`${buttonName} be clicked yo!`);
-};
 
 const getCategoryPath = (categories, currentCat) => {
     let categoryPath;
-    console.log(categories, currentCat);
     if (categories.length) {
         categoryPath = categories.filter(category => category.name === currentCat)[0].path
     }
@@ -34,37 +33,42 @@ const getCategoryPath = (categories, currentCat) => {
 const Home = (props) => {
     return (
         <div className="posts-list">
-            <div className="tool-bar">
-                <Toggle
-                    label="Sort By Date (Default is Vote Score)"
-                    defaultToggled={false}
-                    onToggle={() => {
-                        const newToggleState = !props.sort.togglePostTypeUIState;
-                        const newSortType = (newToggleState === true) ? 'timestamp' : 'voteScore';
-                        props.actions.togglePostSortType(newToggleState);
-                        props.actions.changePostsSort(newSortType, props.sort.sortPostOrder);
-                    }}
-                    labelPosition="right"
-                    style={{ margin: 20 }}
-                />
-                <Toggle
-                    label="Sort Asc (Default is Desc)"
-                    defaultToggled={true}
-                    onToggle={() => {
-                        const newToggleState = !props.sort.togglePostOrderUIState;
-                        const newOrder = (newToggleState === true) ? 'asc' : 'desc';
-                        props.actions.togglePostSortOrder(newToggleState);
-                        props.actions.changePostsSort(props.sort.sortPostType, newOrder);
-                    }}
-                    labelPosition="right"
-                    style={{ margin: 20 }}
-                />
-                <FloatingActionButton mini={true} onClick={() => {
-                    props.actions.toggleModalState(true);
-                }}>
-                    <ContentAdd />
-                </FloatingActionButton>
-            </div>
+            <Toolbar>
+                <ToolbarGroup firstChild={true}>
+                    <Toggle
+                        label="Sort By Date (Default is Vote Score)"
+                        defaultToggled={false}
+                        onToggle={() => {
+                            const newToggleState = !props.ui.togglePostTypeUIState;
+                            const newSortType = (newToggleState === true) ? 'timestamp' : 'voteScore';
+                            props.actions.togglePostSortType(newToggleState);
+                            props.actions.changePostsSort(newSortType, props.ui.sortPostOrder);
+                        }}
+                        labelPosition="right"
+                        style={{ margin: 20 }}
+                    />
+                    <Toggle
+                        label="Sort Asc (Default is Desc)"
+                        defaultToggled={true}
+                        onToggle={() => {
+                            const newToggleState = !props.ui.togglePostOrderUIState;
+                            const newOrder = (newToggleState === true) ? 'asc' : 'desc';
+                            props.actions.togglePostSortOrder(newToggleState);
+                            props.actions.changePostsSort(props.ui.sortPostType, newOrder);
+                        }}
+                        labelPosition="right"
+                        style={{ margin: 20 }}
+                    />
+                </ToolbarGroup>
+                <ToolbarGroup style={{zIndex: '2000'}}>
+                    <FloatingActionButton mini={true} onClick={() => {
+                        props.actions.setPostFormMode('create');
+                        props.actions.toggleModalState(true);
+                    }}>
+                        <ContentAdd />
+                    </FloatingActionButton>
+                </ToolbarGroup>
+            </Toolbar>
             {
                 props.posts.map((post) => (
                     <Card key={post.id}>
@@ -75,9 +79,9 @@ const Home = (props) => {
                             <RaisedButton
                                 label={post.category}
                                 secondary={true}
-                                href={`/${getCategoryPath(props.categories, post.category)}`}
-
-                            />
+                                onClick={() => {
+                                    props.actions.push(`/${getCategoryPath(props.categories, post.category)}`);
+                                }} />
                         </CardHeader>
                         <div>Vote Score: {post.voteScore}</div>
                         <div>Comments: {post.commentCount}</div>
@@ -99,10 +103,13 @@ const Home = (props) => {
                                 <ActionThumbDown />
                             </FloatingActionButton>
                             <FlatButton label="View Post" onClick={() => {
-                                onclick(`view post for ${post.id}`);
-                            }} />
+                                props.actions.push(`/${getCategoryPath(props.categories, post.category)}/${post.id}`);
+                            }}>
+
+                            </FlatButton>
                             <FlatButton label="Edit Post" onClick={() => {
                                 props.actions.setCurrentPost(post);
+                                props.actions.setPostFormMode('edit');
                                 props.actions.toggleModalState(true);
                             }} />
                             <FloatingActionButton mini={true} onClick={() => {
@@ -115,7 +122,7 @@ const Home = (props) => {
                 ))
             }
             <Dialog
-                open={props.sort.modalOpen}
+                open={props.ui.modalOpen}
                 actions={[
                     <FlatButton
                         label="Cancel"
@@ -136,16 +143,28 @@ const Home = (props) => {
                 ]}
             >
                 <PostForm onSubmit={(values) => {
-                    const newPost = {
-                        id: uuidv4(),
-                        timestamp: Date.now(),
-                        voteScore: 1,
-                        ...values
-                    };
-                    props.actions.submitNewPostValues(newPost).then(() => {
-                        props.actions.setCurrentPost(null);
-                        props.actions.toggleModalState(false);
-                    });
+                    if (props.ui.postFormMode === 'create') {
+                        const newPost = {
+                            id: uuidv4(),
+                            timestamp: Date.now(),
+                            voteScore: 1,
+                            ...values
+                        };
+                        props.actions.submitNewPostValues(newPost).then(() => {
+                            props.actions.setCurrentPost(null);
+                            props.actions.toggleModalState(false);
+                        });
+                    } else {
+                        const updatedPost = {
+                            timestamp: Date.now(),
+                            ...values
+                        };
+                        props.actions.submitUpdatedPostValues(values.id, updatedPost).then(() => {
+                            props.actions.setCurrentPost(null);
+                            props.actions.toggleModalState(false);
+                        });
+                    }
+
                 }} />
             </Dialog>
         </div>
@@ -153,15 +172,14 @@ const Home = (props) => {
 };
 
 Home.propTypes = {
-    actions: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => {
     return {
-        posts: getPostsWithCommentCount(state),
+        posts: getPostsSorted(state),
         categories: getCategories(state),
-        sort: getPostSortState(state)
+        ui: getUIState(state)
     };
 };
 
@@ -171,9 +189,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(Home)
-);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);

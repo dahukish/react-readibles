@@ -26,3 +26,12 @@ export const togglePostSortOrder = (currentToggleState) => dispatch => (
 export const toggleModalState = (currentModalState) => dispatch => (
     dispatch(modalState(currentModalState))
 );
+
+export const updatePostFormMode = (formMode) => ({
+    type: ActionTypes.SET_POST_FORM_MODE,
+    formMode
+});
+
+export const setPostFormMode = (formMode) => dispatch => (
+    dispatch(updatePostFormMode(formMode))
+);

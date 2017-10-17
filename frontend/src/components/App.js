@@ -6,6 +6,11 @@ import { Route, Switch } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Routes from '../routes';
 import * as Actions from '../store/actions';
+import { getLocation } from '../selectors';
+
+const ConnectedSwitch = connect(state => ({
+  location: state.location
+}))(Switch);
 
 class App extends Component {
 
@@ -25,14 +30,15 @@ class App extends Component {
       <div className="App">
         <header>
           <AppBar
-            title="Title"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            iconElementLeft={<span></span>}
+            title="React Readibles"
           />
         </header>
-        <Switch>
+        <ConnectedSwitch>
           <Route exact path="/" component={Routes.Home} />
-          <Route path="/:category" component={Routes.Category} />
-        </Switch>
+          <Route exact path="/:category" component={Routes.Category} />
+          <Route exact path="/:category/:id" component={Routes.PostView} />
+        </ConnectedSwitch>
       </div>
     );
   }
@@ -42,10 +48,16 @@ App.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
+const mapSateToProps = (state) => {
+  return {
+    location: getLocation(state)
+  }
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     actions: bindActionCreators(Actions.default, dispatch)
   }
 };
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapSateToProps, mapDispatchToProps)(App);
