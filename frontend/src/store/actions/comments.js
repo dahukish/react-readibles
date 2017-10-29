@@ -1,6 +1,6 @@
 import * as ActionTypes from './actionTypes';
 import * as API from '../../utils/commentsAPI';
-import { submit, reset } from 'redux-form';
+import { initialize, submit, reset } from 'redux-form';
 
 export const recieveAllComments = (comments) => ({
     type: ActionTypes.RECIEVE_COMMENTS,
@@ -18,7 +18,6 @@ export const addNewComment = (newComment) => ({
 });
 
 export const submitNewCommentValues = (commentValues) => dispatch => {
-    console.log('commentValues', commentValues)
     API.addComment(commentValues)
         .then(newComment => dispatch(addNewComment(newComment)))
 };
@@ -29,6 +28,10 @@ export const submitCommentForm = ()=> dispatch => {
 
 export const resetCommentForm = ()=> dispatch => {
     dispatch(reset('comment_form'));
+};
+
+export const setCurrentComment = (currentComment) => dispatch => {
+    dispatch(initialize('comment_form', currentComment));
 };
 
 export const updateComment = (updatedComment) => ({
@@ -50,4 +53,14 @@ export const removeDeletedComment = (deletedComment) => ({
 export const deleteComment = (id) => dispatch => (
     API.deleteComment(id)
         .then(deletedComment => dispatch(removeDeletedComment(deletedComment)))
+);
+
+export const recieveVoteForComment = (updatedComment) => ({
+    type: ActionTypes.RECIEVE_COMMENT_VOTE,
+    updatedComment
+});
+
+export const voteForComment = (id, vote) => dispatch => (
+    API.voteForComment(id, vote)
+        .then(updatedComment => dispatch(recieveVoteForComment(updatedComment)))
 );
