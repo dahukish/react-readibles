@@ -8,15 +8,20 @@ const postsSelectorByCategory = (state, props) =>
 
 const commentsSelector = state => state.commentsReducer.comments;
 
-const getApplicationSate = state => state.applicationReducer;
+export const getApplicationSate = state => state.applicationReducer;
 
-export const getPostsSorted = createSelector(
-    postsSelector,
-    getApplicationSate,
-    (posts, uiState) => {
-        return posts.sort(sortBy(uiState.sortPostType, uiState.sortPostOrder));
+export const getPostsSorted = (state, props) => {
+    let posts;
+    if (props && props.match) {
+        posts = postsSelectorByCategory(state, props);
+    } else {
+        posts = postsSelector(state);
     }
-);
+    const uiState = getApplicationSate(state);
+    const sortedPosts = posts.sort(sortBy(uiState.sortPostType, uiState.sortPostOrder));
+
+    return new Array(...sortedPosts);
+};
 
 export const getPostsForCategorySorted = createSelector(
     postsSelectorByCategory,
@@ -28,20 +33,6 @@ export const getPostsForCategorySorted = createSelector(
 
 export const getCategories = (state) => state.categoriesReducer.categories;
 
-export const getUIState = createSelector(
-    getApplicationSate,
-    (sortState) => {
-        return {
-            togglePostTypeUIState: sortState.togglePostTypeUIState,
-            togglePostOrderUIState: sortState.togglePostOrderUIState,
-            modalOpen: sortState.modalOpen,
-            sortPostType: sortState.sortPostType,
-            sortPostOrder: sortState.sortPostOrder,
-            postFormMode: sortState.postFormMode
-        };
-    }
-);
-
 export const getCurrentPostFromState = (state) => state.postsReducer.currentPost;
 
 
@@ -50,18 +41,16 @@ export const getCurrentPostFromParams = (state, props) =>
         .filter(post => post.category === props.match.params.category)
         .filter(filteredPost => filteredPost.id === props.match.params.id)[0];
 
-export const getViewPost = createSelector(
-    getCurrentPostFromParams,
-    (post) => {
-        return post;
-    }
-);
+export const getViewPost = (state, props) => {
+    const post = getCurrentPostFromParams(state, props);
+    return post;
+};
 
 export const getViewPostComments = (state, props) => {
     const post = getCurrentPostFromParams(state, props);
-    return commentsSelector(state).filter(comment => comment.parentId === post.id);
+    const ui = getApplicationSate(state);
+    return commentsSelector(state).filter(comment => comment.parentId === post.id).sort(sortBy(ui.sortCommentType, ui.sortCommentOrder));
 };
 
 export const getPostFormMode = (state) => state.applicationReducer.postFormMode;
-
 export const getLocation = (state) => state.router.location;
