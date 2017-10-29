@@ -16,6 +16,27 @@ const commentsReducer = (state = initialComments, action) => {
             return {
                 ...state
             };
+        case ActionTypes.RECIEVE_COMMENT_VOTE:
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.id === action.updatedComment.id) {
+                        comment.voteScore = action.updatedComment.voteScore;
+                    }
+                    return comment;
+                })
+            };
+        case ActionTypes.UPDATE_COMMENT:
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.id === action.updatedComment.id) {
+                        return action.updatedComment;
+                    } else {
+                        return comment;
+                    }
+                })
+            };
         case ActionTypes.DELETE_POST:
             return {
                 ...state,
