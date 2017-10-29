@@ -3,7 +3,8 @@ import { commentsFilter } from '../../utils/helpers';
 
 export const initialPosts = {
     posts: [],
-    currentPost: null
+    currentPost: null,
+    postsSortOrder: 'asc'
 };
 
 const postsReducer = (state = initialPosts, action) => {
@@ -22,27 +23,28 @@ const postsReducer = (state = initialPosts, action) => {
                     }
                     return post;
                 })
-            }
+            };
         case ActionTypes.RECIEVE_COMMENTS:
             const postsWithComments = state.posts.map(post => {
                 return {
                     ...post,
                     commentCount: commentsFilter(action.comments, post)
                 };
-            })
+            });
             return {
                 ...state,
                 posts: postsWithComments
-            }
+            };
         case ActionTypes.SORT_POSTS:
             return {
                 ...state
-            }
+            };
         case ActionTypes.CREATE_POST:
+            action.newPost.commentCount = 0;
             state.posts.push(action.newPost);
             return {
                 ...state
-            }
+            };
         case ActionTypes.UPDATE_POST:
             return {
                 ...state,
@@ -52,7 +54,7 @@ const postsReducer = (state = initialPosts, action) => {
                     }
                     return post;
                 })
-            }
+            };
         case ActionTypes.DELETE_POST:
             return {
                 ...state,
