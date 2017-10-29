@@ -12,8 +12,6 @@ export const getPosts = () => {
     .then(data => data);
 };
 
-export const getPost = (id) => { };
-
 export const voteForPost = (id, vote) => {
   return fetch(`http://localhost:3001/posts/${id}`, {
     headers,
