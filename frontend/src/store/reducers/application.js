@@ -7,8 +7,12 @@ export const initialApplicationState = {
     sortCommentOrder: 'asc',
     togglePostTypeUIState: false,
     togglePostOrderUIState: true,
-    modalOpen: false,
-    postFormMode: 'create'
+    modals: {
+        post: false,
+        comment: false
+    },
+    postFormMode: 'create',
+    commentFormMode: 'create'
 };
 
 const applicationReducer = (state = initialApplicationState, action) => {
@@ -28,12 +32,20 @@ const applicationReducer = (state = initialApplicationState, action) => {
         case ActionTypes.TOGGLE_MODAL_STATE:
             return {
                 ...state,
-                modalOpen: action.modalState
+                modals: {
+                    ...state.modals,
+                    [action.modalName]: action.modalState
+                }
             }
         case ActionTypes.SET_POST_FORM_MODE:
             return {
                 ...state,
                 postFormMode: action.formMode
+            }
+        case ActionTypes.SET_COMMENT_FORM_MODE:
+            return {
+                ...state,
+                commentFormMode: action.formMode
             }
         default:
             return state;
