@@ -10,8 +10,9 @@ const toggleSortOrder = (currentToggleState) => ({
     currentToggleState
 });
 
-const modalState = (modalState) => ({
+const modalState = (modalName, modalState) => ({
     type: ActionTypes.TOGGLE_MODAL_STATE,
+    modalName,
     modalState
 });
 
@@ -23,8 +24,8 @@ export const togglePostSortOrder = (currentToggleState) => dispatch => (
     dispatch(toggleSortOrder(currentToggleState))
 );
 
-export const toggleModalState = (currentModalState) => dispatch => (
-    dispatch(modalState(currentModalState))
+export const toggleModalState = (modalName, currentModalState) => dispatch => (
+    dispatch(modalState(modalName, currentModalState))
 );
 
 export const updatePostFormMode = (formMode) => ({
@@ -34,4 +35,13 @@ export const updatePostFormMode = (formMode) => ({
 
 export const setPostFormMode = (formMode) => dispatch => (
     dispatch(updatePostFormMode(formMode))
+);
+
+export const updateCommentFormMode = (formMode) => ({
+    type: ActionTypes.SET_COMMENT_FORM_MODE,
+    formMode
+});
+
+export const setCommentFormMode = (formMode) => dispatch => (
+    dispatch(updateCommentFormMode(formMode))
 );
