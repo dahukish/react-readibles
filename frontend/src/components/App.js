@@ -38,6 +38,7 @@ class App extends Component {
           <Route exact path="/" component={Routes.Home} />
           <Route exact path="/:category" component={Routes.Category} />
           <Route exact path="/:category/:id" component={Routes.PostView} />
+          <Route exact path="*" component={Routes.Home} />
         </ConnectedSwitch>
       </div>
     );
