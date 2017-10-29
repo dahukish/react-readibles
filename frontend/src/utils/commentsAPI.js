@@ -56,3 +56,13 @@ export const updateComment = (id, commentValues) => {
       .then(res => res.json())
       .then(data => data);
   };
+
+  export const voteForComment = (id, vote) => {
+    return fetch(`http://localhost:3001/comments/${id}`, {
+      headers,
+      method: 'post',
+      body: JSON.stringify({ option: vote })
+    })
+      .then(res => res.json())
+      .then(data => data);
+  };
