@@ -1,0 +1,14 @@
+{
+  "name": "reactnd-project-readable-starter",
+  "version": "1.0.0",
+  "author": "Stephen Hukish <stephen.hukish@gmail.com>",
+  "scripts": {
+    "install:api-server": "cd ./api-server; npm install",
+    "install:frontend": "cd ./frontend; npm install",
+    "install": "npm run install:api-server && npm run install:frontend",
+    "start:api-server": "cd ./api-server; node server.js",
+    "start:frontend": "cd ./frontend; npm run start",
+    "start": "npm run start:api-server | npm run start:frontend"
+  },
+  "license": "MIT"
+}
