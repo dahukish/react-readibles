@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { getCategories } from '../selectors';
 
-const Post = props => {
+const _post_ = props => {
     const { handleSubmit } = props
     return (
         <form onSubmit={(handleSubmit)}>
@@ -59,16 +60,20 @@ const Post = props => {
     )
 };
 
+_post_.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    categories: PropTypes.array.isRequired
+};
+
+const PostForm = reduxForm({
+    form: 'post_form'
+})(_post_);
+
 const mapStateToProps = (state) => {
     return {
         categories: getCategories(state)
     };
 };
-
-
-const PostForm = reduxForm({
-    form: 'post_form'
-})(Post);
 
 export default connect(
     mapStateToProps,

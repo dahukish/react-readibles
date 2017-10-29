@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
@@ -33,6 +34,9 @@ const _Comment_ = props => {
     )
 };
 
+_Comment_.propTypes = {
+    handleSubmit: PropTypes.func.isRequired
+}
 
 const CommentForm = reduxForm({
     form: 'comment_form'
