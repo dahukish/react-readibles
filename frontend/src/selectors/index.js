@@ -49,6 +49,9 @@ export const getViewPost = (state, props) => {
 export const getViewPostComments = (state, props) => {
     const post = getCurrentPostFromParams(state, props);
     const ui = getApplicationSate(state);
+    if (!post) {
+        return [];
+    }
     return commentsSelector(state).filter(comment => comment.parentId === post.id).sort(sortBy(ui.sortCommentType, ui.sortCommentOrder));
 };
 

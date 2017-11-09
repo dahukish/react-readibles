@@ -1,7 +1,7 @@
 import * as ActionTypes from './actionTypes';
 import * as API from '../../utils/postsAPI';
 import { initialize, submit, reset } from 'redux-form';
-
+import { history } from '../../history';
 
 export const sortPostsBy = (sortBy, order) => ({
     type: ActionTypes.SORT_POSTS,
@@ -13,24 +13,24 @@ export const changePostsSort = (sortBy, order) => dispatch => (
     dispatch(sortPostsBy(sortBy, order))
 );
 
-export const recievePosts = (posts) => ({
-    type: ActionTypes.RECIEVE_POSTS,
+export const receivePosts = (posts) => ({
+    type: ActionTypes.RECEIVE_POSTS,
     posts
 });
 
 export const fetchPosts = () => dispatch => (
     API.getPosts()
-        .then(posts => dispatch(recievePosts(posts)))
+        .then(posts => dispatch(receivePosts(posts)))
 );
 
-export const recieveVoteForPost = (updatedPost) => ({
-    type: ActionTypes.RECIEVE_POST_VOTE,
+export const receiveVoteForPost = (updatedPost) => ({
+    type: ActionTypes.RECEIVE_POST_VOTE,
     updatedPost
 });
 
 export const voteForPost = (id, vote) => dispatch => (
     API.voteForPost(id, vote)
-        .then(updatedPost => dispatch(recieveVoteForPost(updatedPost)))
+        .then(updatedPost => dispatch(receiveVoteForPost(updatedPost)))
 );
 
 export const addNewPost = (newPost) => ({
@@ -51,8 +51,9 @@ export const updatePost = (updatedPost) => ({
 
 export const submitUpdatedPostValues = (id, postValues) => dispatch => (
     API.updatePost(id, postValues)
-        .then(updatedPost => dispatch(updatePost(updatedPost)))
-
+        .then(updatedPost => {
+            dispatch(updatePost(updatedPost));
+        })
 );
 
 export const removeDeletedPost = (deletedPost) => ({
@@ -84,3 +85,12 @@ export const submitPostForm = () => dispatch => {
 export const resetPostForm = () => dispatch => {
     dispatch(reset('post_form'));
 };
+
+export const getPostUrl = (postUrl) => ({
+    type: ActionTypes.REDIRECT_TO_POST,
+    postUrl
+});
+
+export const redirectToPost = (to) => dispatch => (
+    history.push(to)
+);

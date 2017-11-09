@@ -56,6 +56,7 @@ const PostActions = (props) => {
                     props.actions.submitUpdatedPostValues(values.id, updatedPost).then(() => {
                         props.actions.setCurrentPost(null);
                         props.actions.toggleModalState('post', false);
+                        props.actions.redirectToPost(`/${values.category}/${values.id}`);
                     });
                 }
 

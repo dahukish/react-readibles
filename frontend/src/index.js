@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import App from './components/App';
-import { store, history } from './store/store';
+import { store } from './store/store';
+import { history } from './history';
 import './index.scss';
 import registerServiceWorker from './registerServiceWorker';
 

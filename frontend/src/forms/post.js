@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { getCategories } from '../selectors';
+import { required } from './index';
 
 const _post_ = props => {
     const { handleSubmit } = props
@@ -16,6 +17,7 @@ const _post_ = props => {
                         id="title"
                         component="input"
                         type="text"
+                        validate={[required]}
                         placeholder="Enter title"
                     />
                 </div>
@@ -35,8 +37,7 @@ const _post_ = props => {
             <div>
                 <label>Post Category</label>
                 <div>
-                    <Field name="category" component="select">
-                        <option />
+                    <Field name="category" component="select" validate={[required]}>
                         {
                             props.categories && props.categories.map(category => (
                                 <option key={category.path} value={category.name}>{category.name}</option>
@@ -52,6 +53,7 @@ const _post_ = props => {
                         name="body"
                         id="body"
                         component="textarea"
+                        validate={[required]}
                         placeholder="Enter post body"
                     />
                 </div>

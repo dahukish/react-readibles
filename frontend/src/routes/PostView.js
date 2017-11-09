@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Chip from 'material-ui/Chip';
@@ -9,7 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import uuidv4 from 'uuid/v4';
-import { history } from '../store/store';
+import { history } from '../history';
 import * as Actions from '../store/actions';
 import {
     getViewPost,
@@ -27,12 +28,6 @@ class PostView extends Component {
         return id && id === paramId;
     }
 
-    componentWillMount() {
-        if (!this.isValidPost(this.props.match.params.id)) {
-            this.props.actions.push('/');
-        }
-    }
-
     render() {
         const {
             id,
@@ -47,6 +42,7 @@ class PostView extends Component {
             } = this.props;
         return (
             <div>
+                {!this.isValidPost(id) && (<Redirect to={'/'} />)}
                 <Toolbar>
                     <ToolbarGroup firstChild={true}>
                         <RaisedButton label="Back" primary={true} onClick={() => {
@@ -113,7 +109,7 @@ class PostView extends Component {
                     )
                 }
                 <CommentList match={this.props.match} />
-                <PostActions/>
+                <PostActions />
                 <Dialog
                     open={this.props.ui.modals.comment}
                     actions={[
@@ -177,6 +173,18 @@ PostView.propTypes = {
     deleted: PropTypes.bool.isRequired,
     commentCount: PropTypes.number.isRequired,
     voteScore: PropTypes.number.isRequired
+};
+
+PostView.defaultProps = {
+    id: '',
+    timestamp: 0,
+    title: '',
+    author: '',
+    body: '',
+    category: '',
+    deleted: false,
+    commentCount: 0,
+    voteScore: 0
 };
 
 const mapStateToProps = (state, props) => {

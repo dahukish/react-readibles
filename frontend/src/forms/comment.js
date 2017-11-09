@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { required } from './index';
 
 const _Comment_ = props => {
     const { handleSubmit } = props
@@ -15,6 +16,7 @@ const _Comment_ = props => {
                         id="author"
                         component="input"
                         type="text"
+                        validate={[required]}
                         placeholder="Enter Author name"
                     />
                 </div>
@@ -26,6 +28,7 @@ const _Comment_ = props => {
                         name="body"
                         id="body"
                         component="textarea"
+                        validate={[required]}
                         placeholder="Enter post body"
                     />
                 </div>

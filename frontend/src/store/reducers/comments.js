@@ -6,17 +6,19 @@ export const initialComments = {
 
 const commentsReducer = (state = initialComments, action) => {
     switch (action.type) {
-        case ActionTypes.RECIEVE_COMMENTS:
+        case ActionTypes.RECEIVE_COMMENTS:
             return {
                 ...state,
                 comments: action.comments
             };
         case ActionTypes.CREATE_COMMENT:
-            state.comments.push(action.newComment);
+            const newComments = state.comments.slice(0);
+            newComments.push(action.newComment);
             return {
-                ...state
+                ...state,
+                comments: newComments
             };
-        case ActionTypes.RECIEVE_COMMENT_VOTE:
+        case ActionTypes.RECEIVE_COMMENT_VOTE:
             return {
                 ...state,
                 comments: state.comments.map(comment => {

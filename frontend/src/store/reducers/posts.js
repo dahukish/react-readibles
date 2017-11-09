@@ -9,12 +9,12 @@ export const initialPosts = {
 
 const postsReducer = (state = initialPosts, action) => {
     switch (action.type) {
-        case ActionTypes.RECIEVE_POSTS:
+        case ActionTypes.RECEIVE_POSTS:
             return {
                 ...state,
                 posts: action.posts
             };
-        case ActionTypes.RECIEVE_POST_VOTE:
+        case ActionTypes.RECEIVE_POST_VOTE:
             return {
                 ...state,
                 posts: state.posts.map(post => {
@@ -24,7 +24,7 @@ const postsReducer = (state = initialPosts, action) => {
                     return post;
                 })
             };
-        case ActionTypes.RECIEVE_COMMENTS:
+        case ActionTypes.RECEIVE_COMMENTS:
             const postsWithComments = state.posts.map(post => {
                 return {
                     ...post,
@@ -41,9 +41,11 @@ const postsReducer = (state = initialPosts, action) => {
             };
         case ActionTypes.CREATE_POST:
             action.newPost.commentCount = 0;
-            state.posts.push(action.newPost);
+            const newPosts = state.posts.slice(0);
+            newPosts.push(action.newPost);
             return {
-                ...state
+                ...state,
+                posts: newPosts
             };
         case ActionTypes.UPDATE_POST:
             return {

@@ -2,14 +2,14 @@ import * as ActionTypes from './actionTypes';
 import * as API from '../../utils/commentsAPI';
 import { initialize, submit, reset } from 'redux-form';
 
-export const recieveAllComments = (comments) => ({
-    type: ActionTypes.RECIEVE_COMMENTS,
+export const receiveAllComments = (comments) => ({
+    type: ActionTypes.RECEIVE_COMMENTS,
     comments
 });
 
 export const fetchAllComments = (postIDs) => dispatch => (
     API.getAllComments(postIDs)
-    .then(comments => dispatch(recieveAllComments(comments)))
+    .then(comments => dispatch(receiveAllComments(comments)))
 );
 
 export const addNewComment = (newComment) => ({
@@ -55,12 +55,12 @@ export const deleteComment = (id) => dispatch => (
         .then(deletedComment => dispatch(removeDeletedComment(deletedComment)))
 );
 
-export const recieveVoteForComment = (updatedComment) => ({
-    type: ActionTypes.RECIEVE_COMMENT_VOTE,
+export const receiveVoteForComment = (updatedComment) => ({
+    type: ActionTypes.RECEIVE_COMMENT_VOTE,
     updatedComment
 });
 
 export const voteForComment = (id, vote) => dispatch => (
     API.voteForComment(id, vote)
-        .then(updatedComment => dispatch(recieveVoteForComment(updatedComment)))
+        .then(updatedComment => dispatch(receiveVoteForComment(updatedComment)))
 );
